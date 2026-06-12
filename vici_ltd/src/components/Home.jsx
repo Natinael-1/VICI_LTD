@@ -1,221 +1,170 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-
-import { FaFacebook, FaInstagram } from "react-icons/fa";
+import { FaFacebook, FaInstagram, FaLeaf, FaGlassWater } from "react-icons/fa6";
 
 export default function Home() {
-  // 1. Create a memory state for the mobile menu (starts as 'false' or closed)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
-    <div className="min-h-screen bg-white font-sans">
-      {/* 1. NAVIGATION BAR */}
-      <nav className="p-6 border-b border-gray-200">
+    <div className="min-h-screen bg-white font-sans text-gray-800">
+      {/* 1. UMBRELLA NAVIGATION BAR */}
+      <nav className="p-6 border-b border-gray-100 sticky top-0 bg-white z-50">
         <div className="flex justify-between items-center max-w-7xl mx-auto">
-          <div className="text-2xl font-bold text-green-700 tracking-wider">
-            VICI LTD.
+          {/* Logo Area */}
+          <div className="text-3xl font-extrabold text-vici-deep tracking-tight">
+            VICI Limited
           </div>
 
-          {/* Desktop Menu (Hidden on mobile) */}
-          <div className="hidden md:flex space-x-8 text-gray-600 font-medium">
-            <Link to="/" className="hover:text-green-600">
-              Our Story
+          <div className="hidden md:flex space-x-8 text-vici-deep font-semibold">
+            <Link to="/" className="hover:text-vici-vibrant transition">
+              Corporate Vision
             </Link>
-            <Link to="/" className="hover:text-green-600">
-              Fresh Mushrooms
+            <Link to="/farms" className="hover:text-vici-vibrant transition">
+              VICI Farms
             </Link>
-            <Link to="/" className="hover:text-green-600">
-              Mushroom Tubes
-            </Link>
-            <Link to="/" className="hover:text-green-600">
-              Contact Us
+            <Link
+              to="/beverages"
+              className="hover:text-vici-vibrant transition"
+            >
+              VICI Beverages
             </Link>
           </div>
 
           <div className="hidden md:block">
-            <button className="bg-green-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-green-700 transition">
-              Order via WhatsApp
-            </button>
+            <a
+              href="https://wa.me/yourphonenumber"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-vici-vibrant text-white px-6 py-2.5 rounded-full font-bold hover:bg-green-500 transition shadow-md"
+            >
+              Contact Us
+            </a>
           </div>
 
-          {/* Hamburger Menu Button (Only shows on mobile) */}
+          {/* Mobile Menu Button */}
           <button
-            className="md:hidden text-green-700 text-3xl focus:outline-none"
+            className="md:hidden text-vici-deep text-3xl focus:outline-none"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
-            {/* HTML code for the 3-line hamburger icon */}
             &#9776;
           </button>
         </div>
 
-        {/* 2. MOBILE DROPDOWN MENU */}
-        {/* If isMobileMenuOpen is true, render this box */}
+        {/* Mobile Dropdown */}
         {isMobileMenuOpen && (
-          <div className="md:hidden mt-4 flex flex-col space-y-4 bg-green-50 p-4 rounded-lg text-center shadow-inner">
-            <Link
-              to="/"
-              className="text-gray-700 font-medium hover:text-green-600"
-            >
-              Our Story
+          <div className="md:hidden mt-4 flex flex-col space-y-4 bg-vici-light p-4 rounded-lg text-center shadow-inner">
+            <Link to="/" className="text-vici-deep font-semibold">
+              Corporate Vision
             </Link>
-            <Link
-              to="/"
-              className="text-gray-700 font-medium hover:text-green-600"
-            >
-              Fresh Mushrooms
+            <Link to="/farms" className="text-vici-deep font-semibold">
+              VICI Farms
             </Link>
-            <Link
-              to="/"
-              className="text-gray-700 font-medium hover:text-green-600"
-            >
-              Mushroom Tubes
+            <Link to="/beverages" className="text-vici-deep font-semibold">
+              VICI Beverages
             </Link>
-            <Link
-              to="/"
-              className="text-gray-700 font-medium hover:text-green-600"
-            >
-              Contact Us
-            </Link>
-            <button className="bg-green-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-green-700 transition w-full">
-              Order via WhatsApp
-            </button>
           </div>
         )}
       </nav>
 
-      {/* 2. HERO SECTION */}
-      <header className="relative bg-green-50 px-6 py-20 text-center flex flex-col items-center justify-center">
-        <h1 className="text-5xl font-extrabold text-gray-900 mb-6">
-          Premium Mushrooms for{" "}
-          <span className="text-green-600">Your Health</span>
+      {/* 2. CORPORATE HERO SECTION (Deep Green) */}
+      <header className="relative bg-vici-deep text-white px-6 py-24 text-center flex flex-col items-center justify-center">
+        <h1 className="text-5xl md:text-6xl font-extrabold mb-6 max-w-4xl leading-tight">
+          Advancing Sustainable Agriculture Through{" "}
+          <span className="text-vici-vibrant">Innovation.</span>
         </h1>
-        <p className="text-lg text-gray-600 max-w-2xl mb-10">
-          We provide high-value, locally cultivated fresh mushrooms and
-          ready-to-grow mushroom tubes to power your business and nourish your
-          family.
+        <p className="text-xl md:text-2xl max-w-3xl mb-12 text-gray-200 font-light">
+          To become Rwanda's leading supplier of agricultural solutions,
+          empowering healthier communities and more productive farming systems.
         </p>
-        <div className="space-x-4">
-          <button className="bg-green-600 text-white px-8 py-3 rounded shadow-lg hover:bg-green-700 font-bold transition">
-            Explore Products
-          </button>
-          <button className="bg-white text-green-600 border border-green-600 px-8 py-3 rounded shadow hover:bg-green-50 font-bold transition">
-            Learn to Grow
-          </button>
-        </div>
       </header>
 
-      {/* 3. FEATURE GRID */}
-      <section className="py-20 px-6 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
-          {/* Card 1 */}
-          <div className="p-6 border border-gray-100 rounded-lg shadow-sm hover:shadow-md transition">
-            <div className="h-40 bg-gray-200 rounded-md mb-4 flex items-center justify-center text-gray-400">
-              [Image: Fresh Mushrooms]
-            </div>
-            <h3 className="font-bold text-lg mb-2 text-gray-800">
-              Fresh Harvest
-            </h3>
-            <p className="text-gray-600 text-sm mb-4">
-              Proudly grown and packed to give you the freshest flavors every
-              time.
-            </p>
-            <Link
-              to="/"
-              className="text-green-600 font-semibold text-sm hover:underline"
-            >
-              See Details &rarr;
-            </Link>
-          </div>
+      {/* 3. OUR SUB-BRANDS SECTION (The Pivot) */}
+      <section className="py-24 px-6 max-w-7xl mx-auto">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold text-vici-deep mb-4">
+            Our Divisions
+          </h2>
+          <p className="text-lg text-gray-600">
+            Discover how VICI Limited operates across multiple sectors to build
+            a sustainable future.
+          </p>
+        </div>
 
-          {/* Card 2 */}
-          <div className="p-6 border border-gray-100 rounded-lg shadow-sm hover:shadow-md transition">
-            <div className="h-40 bg-gray-200 rounded-md mb-4 flex items-center justify-center text-gray-400">
-              [Image: Mushroom Tubes]
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+          {/* VICI Farms Card */}
+          <Link
+            to="/farms"
+            className="group block bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 transform hover:-translate-y-1"
+          >
+            <div className="h-48 bg-vici-light flex flex-col items-center justify-center text-vici-deep group-hover:bg-vici-vibrant group-hover:text-white transition duration-300">
+              <FaLeaf size={64} className="mb-4" />
             </div>
-            <h3 className="font-bold text-lg mb-2 text-gray-800">
-              Mushroom Tubes
-            </h3>
-            <p className="text-gray-600 text-sm mb-4">
-              High-yield tubes ready for cultivation in your own space.
-            </p>
-            <Link
-              to="/"
-              className="text-green-600 font-semibold text-sm hover:underline"
-            >
-              See Details &rarr;
-            </Link>
-          </div>
+            <div className="p-10">
+              <h3 className="text-3xl font-bold text-vici-deep mb-4">
+                VICI Farms
+              </h3>
+              <p className="text-gray-600 text-lg mb-8 leading-relaxed">
+                Providing high-quality mushrooms, chili peppers, and innovative
+                agricultural products that enhance nutrition and create economic
+                opportunities.
+              </p>
+              <span className="text-vici-vibrant font-bold text-lg group-hover:text-vici-deep transition">
+                Explore Agriculture &rarr;
+              </span>
+            </div>
+          </Link>
 
-          {/* Card 3 */}
-          <div className="p-6 border border-gray-100 rounded-lg shadow-sm hover:shadow-md transition">
-            <div className="h-40 bg-gray-200 rounded-md mb-4 flex items-center justify-center text-gray-400">
-              [Image: Training]
+          {/* VICI Beverages Card */}
+          <Link
+            to="/beverages"
+            className="group block bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 transform hover:-translate-y-1"
+          >
+            <div className="h-48 bg-gray-50 flex flex-col items-center justify-center text-gray-400 group-hover:bg-vici-deep group-hover:text-white transition duration-300">
+              <FaGlassWater size={64} className="mb-4" />
             </div>
-            <h3 className="font-bold text-lg mb-2 text-gray-800">
-              Expert Training
-            </h3>
-            <p className="text-gray-600 text-sm mb-4">
-              Learn the secrets to successful mushroom cultivation with our
-              team.
-            </p>
-            <Link
-              to="/"
-              className="text-green-600 font-semibold text-sm hover:underline"
-            >
-              See Details &rarr;
-            </Link>
-          </div>
-
-          {/* Card 4 */}
-          <div className="p-6 border border-gray-100 rounded-lg shadow-sm hover:shadow-md transition">
-            <div className="h-40 bg-gray-200 rounded-md mb-4 flex items-center justify-center text-gray-400">
-              [Image: Delivery]
+            <div className="p-10">
+              <h3 className="text-3xl font-bold text-vici-deep mb-4">
+                VICI Beverages
+              </h3>
+              <p className="text-gray-600 text-lg mb-8 leading-relaxed">
+                Expanding our vision into refreshing, innovative drinks. A new
+                wave of premium products designed for quality and taste.
+              </p>
+              <span className="text-gray-500 font-bold text-lg group-hover:text-vici-vibrant transition">
+                Discover More &rarr;
+              </span>
             </div>
-            <h3 className="font-bold text-lg mb-2 text-gray-800">
-              Bulk Supply
-            </h3>
-            <p className="text-gray-600 text-sm mb-4">
-              Consistent supply chains for local businesses and markets.
-            </p>
-            <Link
-              to="/"
-              className="text-green-600 font-semibold text-sm hover:underline"
-            >
-              See Details &rarr;
-            </Link>
-          </div>
+          </Link>
         </div>
       </section>
 
-      {/* 4. FOOTER BANNER */}
-      <footer className="bg-slate-900 text-white text-center py-8">
+      {/* 4. FOOTER */}
+      <footer className="bg-slate-900 text-white text-center py-12">
         <div className="flex flex-col items-center justify-center">
-          <h2 className="text-xl font-bold tracking-widest mb-6">
-            Quality MUSHROOMS FOR HEALTH
+          <h2 className="text-2xl font-bold tracking-widest mb-8 text-vici-vibrant">
+            VICI LIMITED
           </h2>
-
-          <div className="flex space-x-6">
-            {/* Facebook */}
+          <div className="flex space-x-8">
             <a
               href="https://facebook.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-300 hover:text-blue-500 transition-colors duration-300"
+              className="text-gray-400 hover:text-white transition-colors duration-300"
             >
-              {/* Changed from <Facebook /> to <FaFacebook /> */}
-              <FaFacebook size={24} />
+              <FaFacebook size={28} />
             </a>
-
-            {/* Instagram */}
             <a
               href="https://instagram.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-300 hover:text-pink-500 transition-colors duration-300"
+              className="text-gray-400 hover:text-vici-vibrant transition-colors duration-300"
             >
-              {/* Changed from <Instagram /> to <FaInstagram /> */}
-              <FaInstagram size={24} />
+              <FaInstagram size={28} />
             </a>
           </div>
+          <p className="mt-8 text-gray-500 text-sm">
+            © 2026 VICI Limited. All rights reserved.
+          </p>
         </div>
       </footer>
     </div>

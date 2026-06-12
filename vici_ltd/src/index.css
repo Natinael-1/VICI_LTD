@@ -1,1 +1,6 @@
 @import "tailwindcss";
+@theme {
+  --color-vici-deep: #005a3f;
+  --color-vici-vibrant: #10d15f;
+  --color-vici-light: #eefcf4;
+}
