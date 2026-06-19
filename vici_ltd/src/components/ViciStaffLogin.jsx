@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { FaLock } from "react-icons/fa6";
 
-export default function AdminLogin() {
+export default function StaffLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -49,12 +49,13 @@ export default function AdminLogin() {
       }
       // ---------------------------------------------
 
-      // 2. Read the ticket Kenia sent back
+      // 2. Read the ticket Kenia sent back(This is just simulation not real one.The real one above(response) will be provided by you.)
       if (backendPayload.success === true) {
+        localStorage.setItem("vici_user_role", backendPayload.role);
         if (backendPayload.role === "admin") {
           navigate("/admin-dashboard");
         } else if (backendPayload.role === "staff") {
-          navigate("/dashboard");
+          navigate("/staff-dashboard");
         }
       } else {
         setError(backendPayload.message); // Show Kenia's exact error message

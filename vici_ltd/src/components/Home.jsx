@@ -16,6 +16,9 @@ export default function Home() {
           </div>
 
           <div className="hidden md:flex space-x-8 text-vici-deep font-semibold">
+            <Link to="/about-us" className="hover:text-vici-vibrant transition">
+              About Us
+            </Link>
             <Link to="/" className="hover:text-vici-vibrant transition">
               Corporate Vision
             </Link>
