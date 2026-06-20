@@ -1,13 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FaFacebook, FaInstagram, FaLeaf, FaGlassWater } from "react-icons/fa6";
+import mushroomHand from "../assets/images/mushroom_hand.JPG";
+import mushroomSeedling from "../assets/images/mushroom_seedling.JPG";
+import mushroomReady from "../assets/images/ready_to_eat_mushrooms.JPG";
+
+// Array of your three real mushroom farming images
+const IMAGES = [mushroomHand, mushroomSeedling, mushroomReady];
 
 export default function Home() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  // Auto-slide timer: changes background every 5 seconds
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prevSlide) => (prevSlide + 1) % IMAGES.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
 
   return (
     <div className="min-h-screen bg-white font-sans text-gray-800">
-      {/* 1. UMBRELLA NAVIGATION BAR */}
+      {/* 1. NAVIGATION BAR */}
       <nav className="p-6 border-b border-gray-100 sticky top-0 bg-white z-50">
         <div className="flex justify-between items-center max-w-7xl mx-auto">
           {/* Logo Area */}
@@ -69,19 +84,59 @@ export default function Home() {
         )}
       </nav>
 
-      {/* 2. CORPORATE HERO SECTION (Deep Green) */}
-      <header className="relative bg-vici-deep text-white px-6 py-24 text-center flex flex-col items-center justify-center">
-        <h1 className="text-5xl md:text-6xl font-extrabold mb-6 max-w-4xl leading-tight">
-          Advancing Sustainable Agriculture Through{" "}
-          <span className="text-vici-vibrant">Innovation.</span>
-        </h1>
-        <p className="text-xl md:text-2xl max-w-3xl mb-12 text-gray-200 font-light">
-          To become Rwanda's leading supplier of agricultural solutions,
-          empowering healthier communities and more productive farming systems.
-        </p>
+      {/* 2. CINEMATIC HERO SLIDER SECTION */}
+      {/* Outer Window (Viewport) */}
+      <header className="relative w-full h-[550px] md:h-[650px] overflow-hidden bg-black">
+        {/* Sliding Background Layer (The Film Strip) */}
+        <div
+          className="flex h-full w-full transition-transform duration-1000 ease-in-out"
+          style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+        >
+          {IMAGES.map((imgUrl, index) => (
+            <div
+              key={index}
+              className="w-full h-full flex-shrink-0 bg-cover bg-center"
+              style={{ backgroundImage: `url('${imgUrl}')` }}
+            />
+          ))}
+        </div>
+
+        {/* Static Dark Overlay Mask (Sits on top of background, below text) */}
+        <div className="absolute inset-0 bg-black/55 z-0" />
+
+        {/* Static Content Layer (Locked perfectly in place) */}
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-6">
+          <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-6 max-w-4xl leading-tight">
+            Advancing Sustainable Agriculture Through{" "}
+            <span className="text-vici-vibrant block md:inline">
+              Innovation.
+            </span>
+          </h1>
+          <p className="text-lg md:text-2xl max-w-3xl mb-12 text-gray-200 font-light leading-relaxed">
+            To become Rwanda's leading supplier of agricultural solutions,
+            empowering healthier communities and more productive farming
+            systems.
+          </p>
+
+          {/* Slide Progress Indicator Bars */}
+          <div className="flex space-x-3 mt-4">
+            {IMAGES.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentSlide(index)}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  currentSlide === index
+                    ? "w-8 bg-vici-vibrant"
+                    : "w-2 bg-white/40 hover:bg-white/70"
+                }`}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
+        </div>
       </header>
 
-      {/* 3. OUR SUB-BRANDS SECTION (The Pivot) */}
+      {/* 3. OUR SUB-BRANDS SECTION */}
       <section className="py-24 px-6 max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-vici-deep mb-4">
