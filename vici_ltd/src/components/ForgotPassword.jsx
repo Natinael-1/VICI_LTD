@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
+// Custom inline SVG icons to prevent package compilation issues
 const KeyIcon = ({ className = "w-6 h-6" }) => (
   <svg
     className={className}
@@ -34,6 +35,7 @@ const ArrowLeftIcon = ({ className = "w-4 h-4" }) => (
 );
 
 export default function ForgotPassword() {
+  //const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
@@ -50,30 +52,35 @@ export default function ForgotPassword() {
     setMessage("");
 
     try {
-      // 1. Post request payload to Python/Flask password recovery API endpoint
-      const response = await fetch('http://127.0.0.1:5000/api/auth/forgot-password', {
+      // 1. Post request payload to Kenia's password recovery API endpoint
+      /* 
+      const response = await fetch('https://api.viciltd.com/auth/forgot-password', {
         method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json' 
-        },
-        body: JSON.stringify({ email: email })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
       });
-
       const data = await response.json();
+      */
 
-      if (!response.ok) {
-        throw new Error(data.message || "This email address is not registered in our system.");
-      }
+      // Simulated delay & success response
+      await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      if (data.success === true) {
-        setMessage(data.message || "A password reset link has been successfully dispatched to your email address.");
+      // If the email matches our registered staff or admin email
+      if (
+        email === "ishejawizy@gmail.com" ||
+        email === "emmanuel@viciltd.com"
+      ) {
+        setMessage(
+          "A password reset link has been successfully dispatched to your email address.",
+        );
       } else {
-        setError(data.message || "Failed to initiate password reset.");
+        setError(
+          "This email address is not registered in our system. Please try again.",
+        );
       }
-
     } catch (err) {
-      setError(err.message || "Connection failed. Please check your internet and try again.");
-      console.error(`Error occurred: ${err}`);
+      setError("Connection failed. Please check your internet and try again.");
+      console.error(`Error occured: ${err}`);
     } finally {
       setIsLoading(false);
     }
@@ -82,8 +89,10 @@ export default function ForgotPassword() {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center font-sans px-4">
       <div className="bg-white max-w-md w-full rounded-2xl shadow-xl p-8 border border-gray-100 relative overflow-hidden">
+        {/* Decorative Brand Top-Border Accent */}
         <div className="absolute top-0 left-0 w-full h-2 bg-[#015c3a]"></div>
 
+        {/* Back to Login Header Link */}
         <div className="mb-6">
           <Link
             to="/staff-login"
@@ -93,6 +102,7 @@ export default function ForgotPassword() {
           </Link>
         </div>
 
+        {/* Header Icon */}
         <div className="flex flex-col items-center text-center mb-8">
           <div className="h-14 w-16 bg-emerald-50 text-[#015c3a] rounded-full flex items-center justify-center mb-4 shadow-sm border border-green-100">
             <KeyIcon />
@@ -104,18 +114,21 @@ export default function ForgotPassword() {
           </p>
         </div>
 
+        {/* Error Notification Banner */}
         {error && (
           <div className="bg-red-50 text-red-600 p-3 rounded-xl text-sm mb-6 text-center border border-red-100 animate-fadeIn">
             {error}
           </div>
         )}
 
+        {/* Success Notification Banner */}
         {message && (
           <div className="bg-emerald-50 text-emerald-800 p-4 rounded-xl text-sm mb-6 border border-emerald-100 leading-relaxed text-center font-medium animate-fadeIn">
             {message}
           </div>
         )}
 
+        {/* Main Email Request Form */}
         <form onSubmit={handleResetRequest} className="space-y-4">
           <div>
             <label className="block text-xs font-extrabold text-gray-400 uppercase tracking-wider mb-1.5">
