@@ -1,183 +1,35 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  FaShoppingCart,
+  FaBoxOpen,
+  FaSignOutAlt,
+  FaCheckCircle,
+  FaHistory,
+  FaTrash,
+  FaEdit,
+  FaUserCircle,
+  FaCalendarAlt,
+  FaPlusCircle,
+} from "react-icons/fa";
 
-// Defining completely self-contained premium SVG icons to avoid external package resolution errors
-const ShoppingCartIcon = ({ className = "w-5 h-5" }) => (
-  <svg
-    className={className}
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-    strokeWidth={2}
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-    />
-  </svg>
-);
+// 1. ADD THIS LINE RIGHT HERE (Outside your component, below the imports)
+// This tells your frontend to talk directly to Kenia's Flask server!
+const API_BASE_URL = "http://localhost:5000/api";
 
-const BoxOpenIcon = ({ className = "w-5 h-5" }) => (
-  <svg
-    className={className}
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-    strokeWidth={2}
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-    />
-  </svg>
-);
-
-const SignOutIcon = ({ className = "w-5 h-5" }) => (
-  <svg
-    className={className}
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-    strokeWidth={2}
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-    />
-  </svg>
-);
-
-const CheckCircleIcon = ({ className = "w-5 h-5" }) => (
-  <svg
-    className={className}
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-    strokeWidth={2}
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-    />
-  </svg>
-);
-
-const HistoryIcon = ({ className = "w-5 h-5" }) => (
-  <svg
-    className={className}
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-    strokeWidth={2}
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-    />
-  </svg>
-);
-
-const TrashIcon = ({ className = "w-5 h-5" }) => (
-  <svg
-    className={className}
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-    strokeWidth={2}
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-    />
-  </svg>
-);
-
-const EditIcon = ({ className = "w-5 h-5" }) => (
-  <svg
-    className={className}
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-    strokeWidth={2}
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-    />
-  </svg>
-);
-
-const UserCircleIcon = ({ className = "w-5 h-5" }) => (
-  <svg
-    className={className}
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-    strokeWidth={2}
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-    />
-  </svg>
-);
-
-const CalendarIcon = ({ className = "w-5 h-5" }) => (
-  <svg
-    className={className}
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-    strokeWidth={2}
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-    />
-  </svg>
-);
-
-const PlusCircleIcon = ({ className = "w-5 h-5" }) => (
-  <svg
-    className={className}
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-    strokeWidth={2}
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-    />
-  </svg>
-);
+// HELPER FUNCTION: Moved OUTSIDE the component to prevent Temporal Dead Zone (TDZ) bugs!
+const getTodayDateString = () => {
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, "0");
+  const dd = String(today.getDate()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
+};
 
 export default function StaffDashboard() {
+  const navigate = useNavigate(); // RESTORED: This was missing in the top context!
   const [activeTab, setActiveTab] = useState("sales");
   const [notification, setNotification] = useState("");
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  // Helper function to get today's date in local YYYY-MM-DD format
-  const getTodayDateString = () => {
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, "0");
-    const dd = String(today.getDate()).padStart(2, "0");
-    return `${yyyy}-${mm}-${dd}`;
-  };
 
   // ==========================================
   // STATE: FORMS & DATA
@@ -208,7 +60,7 @@ export default function StaffDashboard() {
     date: getTodayDateString(),
   });
 
-  // Hybrid Material Lists State (Starts with presets, expands dynamically)
+  // Hybrid Material Lists State
   const [rawMaterials, setRawMaterials] = useState([
     "Ipamba (kg)",
     "Umurama (kg)",
@@ -216,40 +68,11 @@ export default function StaffDashboard() {
     "Ishwagara (kg)",
   ]);
 
-  // States to handle dynamic custom material input visibility
   const [isCustomMaterial, setIsCustomMaterial] = useState(false);
   const [customMaterialName, setCustomMaterialName] = useState("");
 
-  // Initial Seed Logs (With explicit dates)
-  const [logs, setLogs] = useState([
-    {
-      id: 1,
-      type: "Sale",
-      detail: "5x Fresh Mushrooms @ 2,000 RWF",
-      customer: "John Doe",
-      amount: "10,000 RWF",
-      date: "2026-06-18",
-      time: "10:30 AM",
-    },
-    {
-      id: 2,
-      type: "Inventory",
-      detail: "Added 10kg Ipamba",
-      customer: "-",
-      amount: "Cost: 15,000 RWF",
-      date: "2026-06-18",
-      time: "09:15 AM",
-    },
-    {
-      id: 3,
-      type: "Sale",
-      detail: "2x Mushroom Tubes @ 700 RWF",
-      customer: "Walk-in Customer",
-      amount: "1,400 RWF",
-      date: "2026-06-17",
-      time: "08:45 AM",
-    },
-  ]);
+  // 2. CHANGE THIS: Start with an empty logs array [] so we can load real records from Kenia's DB!
+  const [logs, setLogs] = useState([]);
 
   const products = [
     { id: "p1", name: "Fresh Mushrooms (kg)", price: 2000 },
@@ -260,7 +83,27 @@ export default function StaffDashboard() {
   // DYNAMIC CALCULATIONS & HANDLERS
   // ==========================================
 
-  // Auto-fills the unit price when a product is selected
+  // 3. ADD THIS USEEFFECT BLOCK: Fetches the real database logs on page load!
+  useEffect(() => {
+    const fetchDatabaseLogs = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/operations`);
+        if (response.ok) {
+          const data = await response.json();
+          // Assuming Kenia's GET route returns {"success": true, "logs": [...]}
+          if (data.logs) {
+            setLogs(data.logs);
+          }
+        }
+      } catch (err) {
+        console.error("Could not load historical logs from backend:", err);
+      }
+    };
+
+    window.scrollTo(0, 0);
+    fetchDatabaseLogs();
+  }, []);
+
   const handleProductChange = (e) => {
     const selectedName = e.target.value;
     const foundProduct = products.find((p) => p.name === selectedName);
@@ -271,13 +114,11 @@ export default function StaffDashboard() {
     });
   };
 
-  // Calculates total dynamically
   const calculatedTotal =
     salesData.quantity && salesData.unitPrice
       ? parseFloat(salesData.quantity) * parseFloat(salesData.unitPrice)
       : 0;
 
-  // Handle dynamic dropdown changes for dynamic custom material selection
   const handleMaterialSelectChange = (e) => {
     const selectedValue = e.target.value;
     if (selectedValue === "add_new_custom") {
@@ -289,91 +130,137 @@ export default function StaffDashboard() {
     }
   };
 
-  // Submit recorded sales
-  const handleSalesSubmit = (e) => {
+  // 4. REWRITE THIS FUNCTION: Posts a Sale payload matching Kenia's Flask route!
+  const handleSalesSubmit = async (e) => {
     e.preventDefault();
+    setNotification("Sending to server...");
 
-    const customerName =
-      customerData.name.trim() !== "" ? customerData.name : "Walk-in Customer";
+    const staffName = sessionStorage.getItem("vici_user_name") || "Isheja Wizy";
 
-    const newLog = {
-      id: Date.now(),
+    // Format the payload exactly how Kenia's python code expects it
+    const salePayload = {
       type: "Sale",
-      detail: `${salesData.quantity}x ${salesData.product} @ ${Number(salesData.unitPrice).toLocaleString()} RWF`,
-      customer: customerName,
-      amount: `${calculatedTotal.toLocaleString()} RWF`,
       date: salesData.date,
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
+      staff_name: staffName,
+      salesData: {
+        product: salesData.product,
+        quantity: salesData.quantity,
+        unitPrice: salesData.unitPrice,
+      },
+      customerData: {
+        name: customerData.name,
+        phone: customerData.phone,
+        email: customerData.email,
+        address: customerData.address,
+      },
     };
 
-    setLogs([newLog, ...logs]);
-    setNotification("Sale recorded successfully!");
+    try {
+      const response = await fetch(`${API_BASE_URL}/operations`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(salePayload),
+      });
 
-    // Clear forms while retaining today's default date
-    setSalesData({
-      product: "",
-      quantity: "",
-      unitPrice: "",
-      date: getTodayDateString(),
-    });
-    setCustomerData({ name: "", phone: "", email: "", address: "" });
+      const data = await response.json();
 
-    setTimeout(() => setNotification(""), 3000);
+      if (response.ok && data.success) {
+        setNotification("Sale successfully saved to VICI database!");
+
+        // Re-fetch log list to show the new record in the table instantly
+        const updatedLogsResponse = await fetch(`${API_BASE_URL}/operations`);
+        const updatedData = await updatedLogsResponse.json();
+        if (updatedData.logs) setLogs(updatedData.logs);
+
+        // Reset forms
+        setSalesData({
+          product: "",
+          quantity: "",
+          unitPrice: "",
+          date: getTodayDateString(),
+        });
+        setCustomerData({ name: "", phone: "", email: "", address: "" });
+      } else {
+        setNotification(data.message || "Server rejected transaction.");
+      }
+    } catch (err) {
+      console.error(err);
+      setNotification("Network Error: Could not reach the server.");
+    } finally {
+      setTimeout(() => setNotification(""), 3000);
+    }
   };
 
-  // Submit recorded inventory logs
-  const handleInventorySubmit = (e) => {
+  // 5. REWRITE THIS FUNCTION: Posts an Inventory payload matching Kenia's Flask route!
+  const handleInventorySubmit = async (e) => {
     e.preventDefault();
+    setNotification("Sending to server...");
 
-    // Determine target material name based on hybrid choice
+    const staffName = sessionStorage.getItem("vici_user_name") || "Isheja Wizy";
     const finalizedMaterial = isCustomMaterial
       ? customMaterialName.trim()
       : inventoryData.item;
 
     if (!finalizedMaterial) {
       alert("Please specify or select a valid material.");
+      setNotification("");
       return;
     }
 
-    // Dynamic addition to select dropdown options if it's a new custom type
+    // Standardize dropdown locally if custom
     if (isCustomMaterial && !rawMaterials.includes(finalizedMaterial)) {
       setRawMaterials([...rawMaterials, finalizedMaterial]);
     }
 
-    const newLog = {
-      id: Date.now(),
+    // Format the payload exactly how Kenia's python code expects it
+    const inventoryPayload = {
       type: "Inventory",
-      detail: `${inventoryData.action === "use" ? "Used" : "Added"} ${inventoryData.quantity} ${finalizedMaterial}`,
-      customer: "-",
-      amount:
-        inventoryData.action === "add" && inventoryData.cost
-          ? `Cost: ${Number(inventoryData.cost).toLocaleString()} RWF`
-          : "-",
       date: inventoryData.date,
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
+      staff_name: staffName,
+      inventoryData: {
+        action: inventoryData.action,
+        quantity: inventoryData.quantity,
+        item: finalizedMaterial,
+        cost: inventoryData.cost,
+      },
     };
 
-    setLogs([newLog, ...logs]);
-    setNotification("Inventory updated successfully!");
+    try {
+      const response = await fetch(`${API_BASE_URL}/operations`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(inventoryPayload),
+      });
 
-    // Reset inventory form
-    setInventoryData({
-      item: "",
-      action: "use",
-      quantity: "",
-      cost: "",
-      date: getTodayDateString(),
-    });
-    setCustomMaterialName("");
-    setIsCustomMaterial(false);
+      const data = await response.json();
 
-    setTimeout(() => setNotification(""), 3000);
+      if (response.ok && data.success) {
+        setNotification("Inventory successfully saved to VICI database!");
+
+        // Re-fetch log list
+        const updatedLogsResponse = await fetch(`${API_BASE_URL}/operations`);
+        const updatedData = await updatedLogsResponse.json();
+        if (updatedData.logs) setLogs(updatedData.logs);
+
+        // Reset forms
+        setInventoryData({
+          item: "",
+          action: "use",
+          quantity: "",
+          cost: "",
+          date: getTodayDateString(),
+        });
+        setCustomMaterialName("");
+        setIsCustomMaterial(false);
+      } else {
+        setNotification(data.message || "Server rejected transaction.");
+      }
+    } catch (err) {
+      console.error(err);
+      setNotification("Network Error: Could not reach the server.");
+    } finally {
+      setTimeout(() => setNotification(""), 3000);
+    }
   };
 
   const handleDeleteLog = (id) => {
@@ -393,7 +280,10 @@ export default function StaffDashboard() {
       `Edit feature coming soon! You will be able to update record #${id}.`,
     );
   };
-  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    navigate("/staff-login", { replace: true });
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans pb-24 md:pb-8">
@@ -407,10 +297,10 @@ export default function StaffDashboard() {
             </p>
           </div>
           <button
-            onClick={() => navigate("/staff-login", { replace: true })}
+            onClick={handleLogout}
             className="flex items-center space-x-2 text-red-200 hover:text-white transition"
           >
-            <SignOutIcon />
+            <FaSignOutAlt />
             <span className="hidden md:inline font-semibold">Logout</span>
           </button>
         </div>
@@ -420,7 +310,7 @@ export default function StaffDashboard() {
       <main className="max-w-6xl mx-auto p-4 mt-4">
         {notification && (
           <div className="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg flex items-center shadow-sm">
-            <CheckCircleIcon className="mr-2 w-5 h-5 text-green-600" />
+            <FaCheckCircle className="mr-2" />
             <span className="font-bold">{notification}</span>
           </div>
         )}
@@ -432,7 +322,7 @@ export default function StaffDashboard() {
           >
             <div className="flex items-center space-x-3 mb-6 border-b border-gray-100 pb-4">
               <div className="bg-blue-100 text-blue-600 p-3 rounded-full">
-                <ShoppingCartIcon size={20} />
+                <FaShoppingCart size={20} />
               </div>
               <h2 className="text-xl font-bold text-gray-800">Record a Sale</h2>
             </div>
@@ -441,8 +331,8 @@ export default function StaffDashboard() {
               {/* Date of Sale Input */}
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-1 flex items-center">
-                  <CalendarIcon className="mr-2 text-gray-400 w-4 h-4" /> Date
-                  of Sale *
+                  <FaCalendarAlt className="mr-2 text-gray-400" /> Date of Sale
+                  *
                 </label>
                 <input
                   type="date"
@@ -512,10 +402,10 @@ export default function StaffDashboard() {
                 </div>
               </div>
 
-              {/* CRM Customer details wrapper */}
+              {/* CRM Customer details */}
               <div className="bg-gray-50 p-4 rounded-xl border border-gray-200 mt-6">
                 <div className="flex items-center space-x-2 mb-4 text-[#015c3a]">
-                  <UserCircleIcon className="w-5 h-5 text-[#015c3a]" />
+                  <FaUserCircle size={18} />
                   <h3 className="font-bold text-sm uppercase tracking-wide">
                     Customer Details (Optional)
                   </h3>
@@ -600,13 +490,13 @@ export default function StaffDashboard() {
             </form>
           </section>
 
-          {/* TAB 2: UPDATE INVENTORY (With Hybrid Custom Material Additions) */}
+          {/* TAB 2: UPDATE INVENTORY */}
           <section
             className={`bg-white rounded-2xl shadow-sm border border-gray-200 p-6 ${activeTab === "inventory" ? "block" : "hidden md:block"}`}
           >
             <div className="flex items-center space-x-3 mb-6 border-b border-gray-100 pb-4">
               <div className="bg-orange-100 text-orange-600 p-3 rounded-full">
-                <BoxOpenIcon size={20} />
+                <FaBoxOpen size={20} />
               </div>
               <h2 className="text-xl font-bold text-gray-800">
                 Log Raw Materials
@@ -617,8 +507,8 @@ export default function StaffDashboard() {
               {/* Date of Activity Input */}
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-1 flex items-center">
-                  <CalendarIcon className="mr-2 text-gray-400 w-4 h-4" /> Date
-                  of Entry *
+                  <FaCalendarAlt className="mr-2 text-gray-400" /> Date of Entry
+                  *
                 </label>
                 <input
                   type="date"
@@ -631,7 +521,7 @@ export default function StaffDashboard() {
                 />
               </div>
 
-              {/* Material Dropdown with Dynamic Custom Material Toggle */}
+              {/* Material Dropdown */}
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-1">
                   Select Material *
@@ -661,12 +551,12 @@ export default function StaffDashboard() {
                 </select>
               </div>
 
-              {/* Conditionally rendered Custom Material Text input */}
+              {/* Custom Material Input */}
               {isCustomMaterial && (
                 <div className="bg-orange-50 p-4 rounded-xl border border-orange-200 animate-fadeIn">
-                  <label className="blocktext-xs font-bold text-orange-800 uppercase tracking-wider mb-2 flex items-center">
-                    <PlusCircleIcon className="mr-1 text-orange-500 w-4 h-4" />{" "}
-                    New Material Type Details
+                  <label className="block text-xs font-bold text-orange-800 uppercase tracking-wider mb-2 flex items-center">
+                    <FaPlusCircle className="mr-1 text-orange-500" /> New
+                    Material Type Details
                   </label>
                   <input
                     type="text"
@@ -678,7 +568,7 @@ export default function StaffDashboard() {
                   />
                   <p className="text-xs text-orange-600 mt-2">
                     This custom material will be temporarily memorized in your
-                    dropdown list for subsequent log entries.
+                    dropdown list.
                   </p>
                 </div>
               )}
@@ -729,7 +619,7 @@ export default function StaffDashboard() {
                 </div>
               </div>
 
-              {/* Quantity / Financial input section */}
+              {/* Quantity and Total Cost */}
               <div className="flex space-x-4">
                 <div
                   className={
@@ -796,7 +686,7 @@ export default function StaffDashboard() {
         >
           <div className="flex items-center space-x-3 mb-6 border-b border-gray-100 pb-4">
             <div className="bg-purple-100 text-purple-600 p-3 rounded-full">
-              <HistoryIcon size={20} />
+              <FaHistory size={20} />
             </div>
             <h2 className="text-xl font-bold text-gray-800">
               Recent Activity Logs
@@ -822,7 +712,7 @@ export default function StaffDashboard() {
                         {log.type}
                       </span>
                       <span className="text-xs text-gray-500 flex items-center bg-gray-100 px-2 py-1 rounded-full font-medium">
-                        <CalendarIcon className="mr-1 text-gray-400 w-3 h-3" />{" "}
+                        <FaCalendarAlt className="mr-1 text-gray-400" />{" "}
                         {log.date}
                       </span>
                       <span className="text-xs text-gray-400 font-semibold">
@@ -834,7 +724,7 @@ export default function StaffDashboard() {
                     </p>
 
                     <p className="text-sm text-gray-500 mt-1 flex items-center">
-                      <UserCircleIcon className="inline mr-1 text-gray-400 w-4 h-4" />{" "}
+                      <FaUserCircle className="inline mr-1 text-gray-400" />{" "}
                       {log.customer}
                     </p>
 
@@ -851,14 +741,14 @@ export default function StaffDashboard() {
                       className="p-2 text-gray-400 hover:text-blue-500 transition bg-white border border-gray-200 rounded-md shadow-sm"
                       title="Edit entry"
                     >
-                      <EditIcon />
+                      <FaEdit />
                     </button>
                     <button
                       onClick={() => handleDeleteLog(log.id)}
                       className="p-2 text-gray-400 hover:text-red-500 transition bg-white border border-gray-200 rounded-md shadow-sm"
                       title="Soft Delete"
                     >
-                      <TrashIcon />
+                      <FaTrash />
                     </button>
                   </div>
                 </div>
@@ -874,21 +764,21 @@ export default function StaffDashboard() {
           onClick={() => setActiveTab("sales")}
           className={`flex flex-col items-center p-2 rounded-lg transition ${activeTab === "sales" ? "text-[#015c3a]" : "text-gray-400"}`}
         >
-          <ShoppingCartIcon size={24} className="mb-1" />
+          <FaShoppingCart size={24} className="mb-1" />
           <span className="text-xs font-bold">Sales</span>
         </button>
         <button
           onClick={() => setActiveTab("inventory")}
           className={`flex flex-col items-center p-2 rounded-lg transition ${activeTab === "inventory" ? "text-[#015c3a]" : "text-gray-400"}`}
         >
-          <BoxOpenIcon size={24} className="mb-1" />
+          <FaBoxOpen size={24} className="mb-1" />
           <span className="text-xs font-bold">Inventory</span>
         </button>
         <button
           onClick={() => setActiveTab("history")}
           className={`flex flex-col items-center p-2 rounded-lg transition ${activeTab === "history" ? "text-[#015c3a]" : "text-gray-400"}`}
         >
-          <HistoryIcon size={24} className="mb-1" />
+          <FaHistory size={24} className="mb-1" />
           <span className="text-xs font-bold">History</span>
         </button>
       </nav>

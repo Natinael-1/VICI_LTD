@@ -34,6 +34,8 @@ const ArrowLeftIcon = ({ className = "w-4 h-4" }) => (
   </svg>
 );
 
+//Define root url
+const API_BASE_URL = "http://localhost:5000/api";
 export default function ForgotPassword() {
   //const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -45,7 +47,7 @@ export default function ForgotPassword() {
     window.scrollTo(0, 0);
   }, []);
 
-  const handleResetRequest = async (e) => {
+  /*const handleResetRequest = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
@@ -60,7 +62,7 @@ export default function ForgotPassword() {
         body: JSON.stringify({ email })
       });
       const data = await response.json();
-      */
+      
 
       // Simulated delay & success response
       await new Promise((resolve) => setTimeout(resolve, 1500));
@@ -81,6 +83,35 @@ export default function ForgotPassword() {
     } catch (err) {
       setError("Connection failed. Please check your internet and try again.");
       console.error(`Error occured: ${err}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };*/
+  const handleResetRequest = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError("");
+    setMessage("");
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/forgot-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      const payload = await response.json();
+
+      if (response.ok && payload.success) {
+        setMessage(
+          "A password reset link has been dispatched to your email address.",
+        );
+      } else {
+        setError(payload.message || "This email address is not registered.");
+      }
+    } catch (err) {
+      console.error(`Error occured ${err}`);
+      setError("Connection failed. Please check your local server.");
     } finally {
       setIsLoading(false);
     }

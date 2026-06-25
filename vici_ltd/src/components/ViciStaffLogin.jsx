@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { FaLock } from "react-icons/fa6";
 
+//Define root url
+const API_BASE_URL = "http://localhost:5000/auth";
+
 export default function StaffLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -14,7 +17,7 @@ export default function StaffLogin() {
     window.scrollTo(0, 0);
   }, []);
 
-  const handleLogin = async (e) => {
+  /*const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
     setIsLoading(true); // Tell the app we are starting the request
@@ -32,7 +35,7 @@ export default function StaffLogin() {
       throw new Error(`Network Error happened: ${*response.status})
       } else{
         const backendPayload = await response.json();}
-      */
+      
 
       // --- TEMPORARY SIMULATION FOR YOUR TESTING ---
       await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulates a 1.5 second internet delay
@@ -68,6 +71,40 @@ export default function StaffLogin() {
       );
     } finally {
       // 4. No matter what happens (success or fail), stop the loading spinner
+      setIsLoading(false);
+    }
+  };*/
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError("");
+    setIsLoading(true);
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const payload = await response.json();
+
+      if (response.ok && payload.success) {
+        // Save the role token to sessionStorage (our security wristband!)
+        sessionStorage.setItem("vici_user_role", payload.role);
+        sessionStorage.setItem("vici_user_name", payload.name);
+
+        if (payload.role === "admin") {
+          navigate("/admin-dashboard");
+        } else {
+          navigate("/staff-dashboard"); // Staff dashboard
+        }
+      } else {
+        setError(payload.message || "Invalid email or password.");
+      }
+    } catch (err) {
+      console.error(`Error has occured ${err}`);
+      setError("Cannot connect to the server. Is Kenia's backend running?");
+    } finally {
       setIsLoading(false);
     }
   };

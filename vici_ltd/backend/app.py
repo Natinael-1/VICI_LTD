@@ -23,7 +23,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(100), nullable=False) # Plain text for simplicity per your snippet context
+    password = db.Column(db.String(100), nullable=False) # Plain text for simplicity(may be encrypted later)
     role = db.Column(db.String(20), nullable=False)  # 'admin' or 'staff'
     status = db.Column(db.String(20), default='Active')
 
@@ -163,6 +163,52 @@ def add_operation():
         return jsonify({"success": True, "message": "Inventory tracking updated successfully!"}), 201
 
     return jsonify({"success": False, "message": "Invalid operations payload format."}), 400
+
+
+    # 🚀 1. GET ROUTE: Fetches all operations logs from SQLite database
+@app.route('/api/operations', methods=['GET'])
+def get_operations():
+    try:
+        # Fetch all logs, ordering by ID descending (newest entries first!)
+        logs_query = AuditLog.query.order_by(AuditLog.id.desc()).all()
+        
+        formatted_logs = []
+        for log in logs_query:
+            # Resolve customer name Safely using the database relationship
+            customer_name = "-"
+            if log.customer_id and log.customer_rel:
+                customer_name = log.customer_rel.name
+            elif log.action == 'Sale':
+                customer_name = "Walk-in Customer"
+
+            # Format the transaction monetary value string exactly how your React UI expects it
+            if log.action == 'Sale':
+                display_amount = f"{log.amount:,} RWF"
+            else:  # Inventory Outflow
+                display_amount = f"Cost: {log.amount:,} RWF" if log.amount > 0 else "-"
+
+            formatted_logs.append({
+                "id": log.id,
+                "type": log.action,          # 'Sale' or 'Inventory'
+                "detail": log.detail,
+                "customer": customer_name,
+                "amount": display_amount,
+                "date": log.date,
+                "time": log.time
+            })
+            
+        return jsonify({
+            "success": True,
+            "logs": formatted_logs
+        }), 200
+        
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "message": f"Database query error: {str(e)}"
+        }), 500
+
+
 
 
 # 4. MASTER ENGINE PACKS: AdminDashboard.jsx Aggregations & Audit Rails
