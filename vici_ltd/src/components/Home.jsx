@@ -4,6 +4,7 @@ import { FaFacebook, FaInstagram, FaLeaf, FaGlassWater } from "react-icons/fa6";
 import mushroomHand from "../assets/images/mushroom_hand.JPG";
 import mushroomSeedling from "../assets/images/mushroom_seedling.JPG";
 import mushroomReady from "../assets/images/ready_to_eat_mushrooms.JPG";
+import viciLtdLogo from "../assets/images/VICILTDLOGO.png";
 
 // Array of your three real mushroom farming images
 const IMAGES = [mushroomHand, mushroomSeedling, mushroomReady];
@@ -26,8 +27,18 @@ export default function Home() {
       <nav className="p-6 border-b border-gray-100 sticky top-0 bg-white z-50">
         <div className="flex justify-between items-center max-w-7xl mx-auto">
           {/* Logo Area */}
-          <div className="text-3xl font-extrabold text-vici-deep tracking-tight">
-            VICI Limited
+          <div className="flex gap-2">
+            <Link to="/about-us" className="flex items-center">
+              <img
+                src={viciLtdLogo}
+                alt="VICI Limited Logo"
+                className="h-12 w-auto object-contain transition-transform duration-300 hover:scale-105"
+              />
+            </Link>
+
+            <span className="text-3xl font-extrabold text-vici-deep tracking-tight">
+              VICI Limited
+            </span>
           </div>
 
           <div className="hidden md:flex space-x-8 text-vici-deep font-semibold">

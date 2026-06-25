@@ -1,12 +1,24 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa6";
-import { GiMushroom, GiChiliPepper, GiCow } from "react-icons/gi";
+import { GiMushroom, GiCow } from "react-icons/gi";
+import mushroomHand_2 from "../assets/images/mushroom_hand2.JPG";
+import mushroomSeedling_3 from "../assets/images/mushroom_seedling3.JPG";
+import readMushroom from "../assets/images/ready_to_eat_mushrooms.JPG";
 
 export default function ViciFarms() {
   // This ensures the page loads at the very top when someone clicks the link
+  const [currentSlide, setCurrentSlide] = useState(0);
   useEffect(() => {
     window.scrollTo(0, 0);
+  }, []);
+  const IMAGES = [mushroomHand_2, mushroomSeedling_3, readMushroom];
+  // Auto-slide timer: changes background every 5 seconds
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prevSlide) => (prevSlide + 1) % IMAGES.length);
+    }, 5000);
+    return () => clearInterval(timer);
   }, []);
 
   return (
@@ -32,17 +44,51 @@ export default function ViciFarms() {
       </nav>
 
       {/* 2. FARMS HERO SECTION */}
-      <header className="bg-vici-light py-20 px-6 border-b border-gray-200">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-extrabold text-vici-deep mb-6">
+      <header className="relative w-full h-[550px] md:h-[650px] overflow-hidden bg-black">
+        <div
+          className="flex h-full w-full transition-transform duration-1000 ease-in-out"
+          style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+        >
+          {IMAGES.map((imgUrl, index) => (
+            <div
+              key={index}
+              className="w-full h-full flex-shrink-0 bg-cover bg-center"
+              style={{ backgroundImage: `url('${imgUrl}')` }}
+            />
+          ))}
+        </div>
+
+        {/* Static Dark Overlay Mask (Sits on top of background, below text) */}
+        <div className="absolute inset-0 bg-black/55 z-0" />
+
+        {/* Static Content Layer (Locked perfectly in place) */}
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-6">
+          <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-6 max-w-4xl leading-tight">
             Cultivating Excellence in{" "}
-            <span className="text-vici-vibrant">Agriculture</span>
+            <span className="text-vici-vibrant block md:inline">
+              Agriculture
+            </span>
           </h1>
-          <p className="text-xl text-gray-700 leading-relaxed">
-            From high-yield mushroom cultivation to premium chili peppers and
-            livestock, VICI Farms is dedicated to empowering healthier
-            communities and supporting sustainable farming systems.
+          <p className="text-lg md:text-2xl max-w-3xl mb-12 text-gray-200 font-light leading-relaxed">
+            High-yield mushroom cultivation and livestock, VICI Farms is
+            dedicated to empowering healthier communities and supporting
+            sustainable farming systems.
           </p>
+          {/* Slide Progress Indicator Bars */}
+          <div className="flex space-x-3 mt-4">
+            {IMAGES.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentSlide(index)}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  currentSlide === index
+                    ? "w-8 bg-vici-vibrant"
+                    : "w-2 bg-white/40 hover:bg-white/70"
+                }`}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
         </div>
       </header>
 
@@ -55,7 +101,7 @@ export default function ViciFarms() {
           <div className="h-1 w-20 bg-vici-vibrant mx-auto rounded-full"></div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 px-2">
           {/* Operation 1: Mushrooms */}
           <div className="bg-white border border-gray-100 rounded-2xl p-8 shadow-lg hover:shadow-xl transition flex flex-col items-center text-center">
             <div className="h-20 w-20 bg-green-50 text-vici-deep rounded-full flex items-center justify-center mb-6">
@@ -75,31 +121,11 @@ export default function ViciFarms() {
               rel="noopener noreferrer"
               className="w-full bg-white border-2 border-vici-deep text-vici-deep py-3 rounded-lg font-bold hover:bg-vici-deep hover:text-white transition"
             >
-              Inquire for Bulk Supply
+              See More
             </a>
           </div>
 
-          {/* Operation 2: Chili Peppers */}
-          <div className="bg-white border border-gray-100 rounded-2xl p-8 shadow-lg hover:shadow-xl transition flex flex-col items-center text-center">
-            <div className="h-20 w-20 bg-red-50 text-red-600 rounded-full flex items-center justify-center mb-6">
-              <GiChiliPepper size={40} />
-            </div>
-            <h3 className="text-2xl font-bold text-vici-deep mb-4">
-              Premium Chili
-            </h3>
-            <p className="text-gray-600 mb-8 flex-grow">
-              Expertly grown chili peppers selected for maximum flavor and heat.
-              Perfect for culinary processing and export markets.
-            </p>
-            <a
-              href="https://wa.me/yourphonenumber"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full bg-white border-2 border-vici-deep text-vici-deep py-3 rounded-lg font-bold hover:bg-vici-deep hover:text-white transition"
-            >
-              Request a Quote
-            </a>
-          </div>
+          {/*
 
           {/* Operation 3: Livestock */}
           <div className="bg-white border border-gray-100 rounded-2xl p-8 shadow-lg hover:shadow-xl transition flex flex-col items-center text-center">
@@ -119,7 +145,7 @@ export default function ViciFarms() {
               rel="noopener noreferrer"
               className="w-full bg-white border-2 border-vici-deep text-vici-deep py-3 rounded-lg font-bold hover:bg-vici-deep hover:text-white transition"
             >
-              Learn More
+              See More
             </a>
           </div>
         </div>
